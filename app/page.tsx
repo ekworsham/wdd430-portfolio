@@ -1,5 +1,5 @@
 import Image from "next/image";
-import ProjectList from '@/components/ProjectList';
+import ProjectList from '@/components/projectList';
 const projects = [
   {
     title: 'Whitewater Rafting',
