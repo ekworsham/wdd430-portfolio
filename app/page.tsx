@@ -1,14 +1,19 @@
 import Image from "next/image";
-
-
-
-
-
-
-
-
-
-
+import ProjectList from '@/components/ProjectList';
+const projects = [
+  {
+    title: 'Whitewater Rafting',
+    description: 'A webpage to review rivers and book rafting trips.',
+    technologies: ['html', 'TypeScript', 'CSS'],
+    link: 'https://ekworsham.github.io/wdd130/'
+  },
+  {
+    title: 'Whoville Chamber of Commerce',
+    description: 'A app that fetches and displays members of the Chamber of Commerce',
+    technologies: ['html', 'json', 'CSS'],
+    link:  'https://ekworsham.github.io/wdd231/'
+  }
+];
 
 export default function Home() {
   return (
