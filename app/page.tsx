@@ -48,6 +48,7 @@ export default function Home() {
             </a>{" "}
             center.
           </p>
+          <ProjectList projects={projects} />
         </div>
         <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
           <a
