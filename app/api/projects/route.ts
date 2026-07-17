@@ -1,14 +1,9 @@
-import { getProjects } from '../../projects/lib/projects-db';
+import { NextRequest, NextResponse } from 'next/server';
+import { getProjects } from '@/app/projects/lib/projects-db';
 
-const validTypes = new Set(['opensource', 'school']);
-
-export async function GET(request: Request) {
-    const { searchParams } = new URL(request.url);
-    const type = searchParams.get('type');
-
-    if (type && !validTypes.has(type)) {
-        return Response.json({ error: 'Invalid project type' }, { status: 400 });
-    }
-
-    return Response.json(getProjects(type));
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const type = searchParams.get('type');
+  const projects = await getProjects(type);
+  return NextResponse.json(projects);
 }
