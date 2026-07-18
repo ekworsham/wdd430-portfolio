@@ -1,4 +1,11 @@
-import { getProjects, type Project } from "./lib/projects-db";
+import {
+  fetchFilteredProjects,
+  fetchProjectsPages,
+  type Project,
+} from "./lib/projects-db";
+
+import ProjectSearch from "../../components/projectSearch";
+import Pagination from "../../components/pagination";
 
 export default async function ProjectsPage(props: {
   searchParams?: Promise<{
@@ -10,13 +17,15 @@ export default async function ProjectsPage(props: {
 
   const query = searchParams?.query ?? "";
   const currentPage = Number(searchParams?.page) || 1;
-  console.log({ query, currentPage });
 
-  const projects = await getProjects();
+  const projects = await fetchFilteredProjects(query, currentPage);
+  const totalPages = await fetchProjectsPages(query);
 
   return (
     <main>
       <h1>Projects</h1>
+
+      <ProjectSearch />
 
       {projects.map((project: Project) => (
         <article key={project.id}>
@@ -24,6 +33,8 @@ export default async function ProjectsPage(props: {
           <p>{project.description}</p>
         </article>
       ))}
+
+      <Pagination totalPages={totalPages} />
     </main>
   );
 }
