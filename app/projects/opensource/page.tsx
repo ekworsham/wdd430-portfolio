@@ -1,40 +1,9 @@
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  type: 'opensource' | 'school';
-  technologies: string[];
-  link?: string;
-}
+import ProjectList from '../../../components/projectList';
 
-async function getProjects(): Promise<Project[]> {
-  const res = await fetch(
-    'http://localhost:3000/api/projects?type=opensource',
-    {
-      cache: 'no-store',
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch projects');
-  }
-
-  return res.json();
-}
+import { fetchProjects } from '../lib/fetch-projects';
 
 export default async function OpenSourceProjectsPage() {
-  const projects = await getProjects();
+    const projects = await fetchProjects('opensource');
 
-  return (
-    <main>
-      <h1>Open Source Projects</h1>
-
-      {projects.map((project) => (
-        <article key={project.id}>
-          <h2>{project.title}</h2>
-          <p>{project.description}</p>
-        </article>
-      ))}
-    </main>
-  );
+    return <ProjectList projects={projects} />;
 }

@@ -9,7 +9,7 @@ interface Project {
 
 async function getProjects(): Promise<Project[]> {
   const res = await fetch(
-    "http://localhost:3000/api/projects?type=opensource",
+    "http://localhost:3000/api/projects",
     {
       cache: "no-store",
     }
