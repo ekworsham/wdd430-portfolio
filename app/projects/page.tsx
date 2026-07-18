@@ -1,35 +1,13 @@
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  type: 'opensource' | 'school';
-  technologies: string[];
-  link?: string;
-}
+import { getProjects, type Project } from "./lib/projects-db";
 
-async function getProjects(): Promise<Project[]> {
-  const res = await fetch(
-    "http://localhost:3000/api/projects",
-    {
-      cache: "no-store",
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch projects");
-  }
-
-  return res.json();
-}
-
-export default async function OpenSourceProjectsPage() {
+export default async function ProjectsPage() {
   const projects = await getProjects();
 
   return (
     <main>
-      <h1>Open Source Projects</h1>
+      <h1>Projects</h1>
 
-      {projects.map((project) => (
+      {projects.map((project: Project) => (
         <article key={project.id}>
           <h2>{project.title}</h2>
           <p>{project.description}</p>
