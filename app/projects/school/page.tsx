@@ -1,9 +1,15 @@
-import ProjectList from '../../../components/projectList';
+import { Suspense } from "react";
+import SchoolProjectList from "./SchoolProjectList";
+import Loading from "./loading";
 
-import { fetchProjects } from '../lib/fetch-projects';
+export default function SchoolProjectsPage() {
+  return (
+    <main>
+      <h1>School Projects</h1>
 
-export default async function SchoolProjectsPage() {
-    const projects = await fetchProjects('school');
-
-    return <ProjectList projects={projects} />;
+      <Suspense fallback={<Loading />}>
+        <SchoolProjectList />
+      </Suspense>
+    </main>
+  );
 }
