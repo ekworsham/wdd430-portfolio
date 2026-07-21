@@ -1,4 +1,4 @@
-import { fetchProjects } from "../lib/fetch-projects";
+import { fetchProjects } from "../../lib/fetch-projects";
 import ProjectList from "../../../components/projectList";
 
 export default async function SchoolProjectList() {
