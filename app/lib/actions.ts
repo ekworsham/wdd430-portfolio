@@ -26,10 +26,10 @@ export async function createProject(formData: FormData) {
 
   const { title, description, technologies } = parsed.data;
 
-  await sql`
-    INSERT INTO projects (title, description, technologies)
-    VALUES (${title}, ${description}, ${technologies})
-  `;
+await sql`
+  INSERT INTO projects (title, description, technologies)
+  VALUES (${title}, ${description}, ${technologies})
+`;
 
   revalidatePath('/projects');
   redirect('/projects');
@@ -49,14 +49,14 @@ export async function updateProject(id: string, formData: FormData) {
 
   const { title, description, technologies } = parsed.data;
 
-  await sql`
-    UPDATE projects
-    SET
-      title = ${title},
-      description = ${description},
-      technologies = ${technologies}
-    WHERE id = ${id}
-  `;
+await sql`
+  UPDATE projects
+  SET
+    title = ${title},
+    description = ${description},
+    technologies = ${technologies}
+  WHERE id = ${id}
+`;
 
   revalidatePath('/projects');
   redirect('/projects');
