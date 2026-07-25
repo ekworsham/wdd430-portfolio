@@ -1,6 +1,4 @@
  // app/lib/actions.ts
-
-
 'use server';
 
 import { z } from 'zod';
@@ -12,7 +10,7 @@ const currentYear = new Date().getFullYear();
 
 const ProjectFormSchema = z.object({
   title: z.string().min(2),
-  description: z.string().min(10),
+  description: z.string().min(5),
   technologies: z.string().min(2),
   yearCompleted: z.coerce
     .number()
