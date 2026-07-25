@@ -66,7 +66,7 @@ export default async function Page({
           <input
             id="technologies"
             name="technologies"
-            defaultValue={project.technologies.join(", ")}
+            defaultValue={project.technologies}
             className="w-full border rounded p-2"
             required
           />

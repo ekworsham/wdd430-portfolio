@@ -25,7 +25,16 @@ export default async function ProjectsPage(props: {
 
   return (
     <main className="max-w-5xl mx-auto p-6">
-      <h1 className="text-4xl font-bold mb-6">Projects</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-4xl font-bold">Projects</h1>
+
+        <Link
+          href="/projects/create"
+          className="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+        >
+          Create Project
+        </Link>
+      </div>
 
       <ProjectSearch />
 
@@ -42,25 +51,26 @@ export default async function ProjectsPage(props: {
             <p className="text-gray-700 mb-6">
               {project.description}
             </p>
+
             <div className="mb-6">
               <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
                 Technologies:
               </h3>
 
               <div className="mt-2 flex flex-wrap gap-2">
-                {project.technologies.map((tech) => (
-                  <span
-                    key={tech}
-                    className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800"
-                  >
-                    {tech}
-                  </span>
-                ))}
+                {project.technologies
+                  .map((tech) => tech.trim())
+                  .filter(Boolean)
+                  .map((tech) => (
+                    <span
+                      key={tech}
+                      className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800"
+                    >
+                      {tech}
+                    </span>
+                  ))}
               </div>
-            </div>
-
-
-
+            </div>  
 
             <div className="flex gap-3">
               <Link
