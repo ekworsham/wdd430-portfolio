@@ -1,4 +1,4 @@
- // app/lib/actions.ts
+// app/lib/actions.ts
 'use server';
 
 import { z } from 'zod';
@@ -33,7 +33,6 @@ export async function createProject(
   _prevState: State,
   formData: FormData
 ): Promise<State> {
- 
   const raw = {
     title: formData.get('title'),
     description: formData.get('description'),
@@ -50,26 +49,38 @@ export async function createProject(
     };
   }
 
-const { title, description, technologies, yearCompleted } = parsed.data;
+  const { title, description, technologies, yearCompleted } = parsed.data;
 
-try {
-  await sql`
-    INSERT INTO projects (title, description, technologies, year_completed)
-    VALUES (${title}, ${description}, ${technologies}, ${yearCompleted})
-  `;
+  try {
+    await sql`
+      INSERT INTO projects (
+        title,
+        description,
+        technologies,
+        year_completed
+      )
+      VALUES (
+        ${title},
+        ${description},
+        ${technologies},
+        ${yearCompleted}
+      )
+    `;
+  } catch {
+    return {
+      errors: {},
+      message: 'Database Error: Failed to create project.',
+    };
+  }
 
-} catch {
-  return {
-    errors: {},
-    message: "Database Error: Failed to create project.",
-  };
+  revalidatePath('/projects');
+  redirect('/projects');
 }
 
-revalidatePath("/projects");
-redirect("/projects");
-}
-
-export async function updateProject(id: string, formData: FormData) {
+export async function updateProject(
+  id: string,
+  formData: FormData
+): Promise<void> {
   const raw = {
     title: formData.get('title'),
     description: formData.get('description'),
@@ -77,36 +88,41 @@ export async function updateProject(id: string, formData: FormData) {
     yearCompleted: formData.get('yearCompleted'),
   };
 
- const parsed = ProjectFormSchema.safeParse(raw);
+  const parsed = ProjectFormSchema.safeParse(raw);
 
-if (!parsed.success) {
-  return {
-    errors: parsed.error.flatten().fieldErrors,
-    message: "Invalid project input.",
-  };
-}
+  if (!parsed.success) {
+    throw new Error('Invalid project input.');
+  }
 
   const { title, description, technologies, yearCompleted } = parsed.data;
 
-await sql`
-  UPDATE projects
-  SET
-    title = ${title}, 
-    description = ${description}, 
-    technologies = ${technologies}, 
-    year_completed = ${yearCompleted}
-  WHERE id = ${id}
-`;
+  try {
+    await sql`
+      UPDATE projects
+      SET
+        title = ${title},
+        description = ${description},
+        technologies = ${technologies},
+        year_completed = ${yearCompleted}
+      WHERE id = ${id}
+    `;
+  } catch {
+    throw new Error('Database Error: Failed to update project.');
+  }
 
   revalidatePath('/projects');
   redirect('/projects');
 }
 
-export async function deleteProject(id: number) {
-  await sql`
-    DELETE FROM projects
-    WHERE id = ${id}
-  `;
+export async function deleteProject(id: number): Promise<void> {
+  try {
+    await sql`
+      DELETE FROM projects
+      WHERE id = ${id}
+    `;
+  } catch {
+    throw new Error('Database Error: Failed to delete project.');
+  }
 
   revalidatePath('/projects');
   redirect('/projects');
