@@ -5,8 +5,14 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { signIn } from '@/auth';
+import { auth, signIn } from '@/auth';
 import { AuthError } from 'next-auth';
+
+async function requireOwnerSession() {
+  const session = await auth();
+  if (!session?.user) throw new Error('Not authenticated');
+  return session;
+}
 
 const currentYear = new Date().getFullYear();
 
@@ -35,6 +41,7 @@ export async function createProject(
   _prevState: State,
   formData: FormData
 ): Promise<State> {
+  await requireOwnerSession();
   const raw = {
     title: formData.get('title'),
     description: formData.get('description'),
@@ -83,6 +90,7 @@ export async function updateProject(
   id: string,
   formData: FormData
 ): Promise<void> {
+  await requireOwnerSession();
   const raw = {
     title: formData.get('title'),
     description: formData.get('description'),
@@ -117,6 +125,7 @@ export async function updateProject(
 }
 
 export async function deleteProject(id: number): Promise<void> {
+  await requireOwnerSession();
   try {
     await sql`
       DELETE FROM projects

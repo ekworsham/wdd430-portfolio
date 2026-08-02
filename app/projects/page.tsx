@@ -1,13 +1,18 @@
 import Link from "next/link";
+import { auth } from "@/auth";
+
 import {
   fetchFilteredProjects,
   fetchProjectsPages,
   type Project,
 } from "../lib/projects-db";
 
+import { deleteProject } from "@/app/lib/actions";
+
 import ProjectSearch from "../../components/projectSearch";
 import Pagination from "../../components/pagination";
-import { deleteProject } from "@/app/lib/actions";
+
+import { redirect } from "next/navigation";
 
 export default async function ProjectsPage(props: {
   searchParams?: Promise<{
@@ -15,16 +20,35 @@ export default async function ProjectsPage(props: {
     page?: string;
   }>;
 }) {
+  // Read the session
+  const session = await auth();
+  const user = session?.user;
+
+  // Read search params
   const searchParams = await props.searchParams;
 
   const query = searchParams?.query ?? "";
   const currentPage = Number(searchParams?.page) || 1;
 
+  // Fetch data
   const projects = await fetchFilteredProjects(query, currentPage);
   const totalPages = await fetchProjectsPages(query);
 
+
+  if (!session) {
+    redirect("/login");
+  }
+
   return (
     <main className="max-w-5xl mx-auto p-6">
+
+      {/* Welcome message */}
+      {user && (
+        <p className="mb-4 text-gray-600">
+          Welcome, <strong>{user.name}</strong>!
+        </p>
+      )}
+
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-4xl font-bold">Projects</h1>
 
@@ -38,23 +62,23 @@ export default async function ProjectsPage(props: {
 
       <ProjectSearch />
 
-      <div className="grid gap-6 mt-6">
+      <div className="mt-6 grid gap-6">
         {projects.map((project: Project) => (
           <article
             key={project.id}
             className="rounded-lg border border-gray-200 bg-white p-6 shadow-md"
           >
-            <h2 className="text-2xl font-semibold mb-2">
+            <h2 className="mb-2 text-2xl font-semibold">
               {project.title}
             </h2>
 
-            <p className="text-gray-700 mb-6">
+            <p className="mb-6 text-gray-700">
               {project.description}
             </p>
 
             <div className="mb-6">
               <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-                Technologies:
+                Technologies
               </h3>
 
               <div className="mt-2 flex flex-wrap gap-2">
@@ -70,7 +94,7 @@ export default async function ProjectsPage(props: {
                     </span>
                   ))}
               </div>
-            </div>  
+            </div>
 
             <div className="flex gap-3">
               <Link

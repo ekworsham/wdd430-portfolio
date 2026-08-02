@@ -4,6 +4,15 @@
 import { useActionState } from 'react';
 import { authenticate } from '@/app/lib/actions';
 
+// *******Use Session Greeting import and export*********************************
+import { useSession } from 'next-auth/react';
+
+export function UserGreeting() {
+  const { data: session } = useSession();
+  return <span>{session?.user?.name}</span>;
+}
+  // ***************************************************************************
+
 export function LoginForm() {
   const [errorMessage, formAction, isPending] = useActionState(
     authenticate,
