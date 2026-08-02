@@ -7,6 +7,46 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { auth, signIn } from '@/auth';
 import { AuthError } from 'next-auth';
+import bcrypt from "bcryptjs";
+
+export async function createUser(
+  prevState: string | undefined,
+  formData: FormData
+) {
+  const name = formData.get("name")?.toString().trim();
+  const email = formData.get("email")?.toString().trim();
+  const password = formData.get("password")?.toString();
+
+  if (!name || !email || !password) {
+    return "All fields are required.";
+  }
+
+  // Check for an existing user
+  const existing = await sql`
+    SELECT id
+    FROM users
+    WHERE email = ${email}
+  `;
+
+  if (existing.rows.length > 0) {
+    return "An account with this email already exists.";
+  }
+
+  // Hash the password
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Save the new user
+  await sql`
+    INSERT INTO users (name, email, password)
+    VALUES (
+      ${name},
+      ${email},
+      ${hashedPassword}
+    )
+  `;
+
+  return "Account created successfully.";
+}
 
 async function requireOwnerSession() {
   const session = await auth();
