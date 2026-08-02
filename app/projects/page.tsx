@@ -1,5 +1,7 @@
+// app/projects/page.tsx
 import Link from "next/link";
 import { auth } from "@/auth";
+import { signOut } from "@/auth";
 
 import {
   fetchFilteredProjects,
@@ -13,6 +15,12 @@ import ProjectSearch from "../../components/projectSearch";
 import Pagination from "../../components/pagination";
 
 import { redirect } from "next/navigation";
+
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Project Page',
+};
 
 export default async function ProjectsPage(props: {
   searchParams?: Promise<{
@@ -49,8 +57,20 @@ export default async function ProjectsPage(props: {
         </p>
       )}
 
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-4xl font-bold">Projects</h1>
+     <div className="mb-6 flex justify-end gap-4">
+        <form
+          action={async () => {
+            "use server";
+            await signOut({ redirectTo: "/login" });
+          }}
+        >
+          <button
+            type="submit"
+            className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+          >
+            Sign Out
+          </button>
+        </form>
 
         <Link
           href="/projects/create"

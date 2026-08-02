@@ -2,6 +2,11 @@
 
 import { useActionState } from 'react';
 import { createProject, type State } from '@/app/lib/actions';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Create Page',
+};
 
 const initialState: State = {
   message: null,

@@ -1,5 +1,10 @@
 // app/projects/[id]/page.tsx  (Server Component)
 import { getProjectById } from '@/app/lib/projects-db';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Edit Page',
+};
 
 export default async function ProjectPage(
   {
