@@ -2,20 +2,15 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import { signOut } from "@/auth";
-
 import {
   fetchFilteredProjects,
   fetchProjectsPages,
   type Project,
 } from "../lib/projects-db";
-
 import { deleteProject } from "@/app/lib/actions";
-
 import ProjectSearch from "../../components/projectSearch";
 import Pagination from "../../components/pagination";
-
 import { redirect } from "next/navigation";
-
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

@@ -10,7 +10,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
-      async authorize(credentials, _request) {
+      async authorize(credentials) {
         const parsed = z
           .object({
             email: z.string().email(),
