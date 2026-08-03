@@ -1,11 +1,11 @@
 // app/lib/actions.ts
 'use server';
-
+import { auth, signIn } from '@/auth';
 import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { auth, signIn } from '@/auth';
+
 import { AuthError } from 'next-auth';
 import bcrypt from "bcryptjs";
 
@@ -48,11 +48,13 @@ export async function createUser(
   return "Account created successfully.";
 }
 
+// ***********************************************************************
 async function requireOwnerSession() {
   const session = await auth();
   if (!session?.user) throw new Error('Not authenticated');
   return session;
 }
+// **********************************************************************
 
 const currentYear = new Date().getFullYear();
 
